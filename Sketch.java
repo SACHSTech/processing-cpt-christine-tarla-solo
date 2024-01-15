@@ -29,6 +29,7 @@ public class Sketch extends PApplet {
     holdingPuff = loadImage("Purple Puff Sprite Holding.png");
     multiplier = loadImage("Green X.png");
     heart = loadImage("Pixel Heart.png");
+    background = loadImage("Yellow Cloud Background.png");
   }
 
   /** 
@@ -47,6 +48,7 @@ public class Sketch extends PApplet {
    */
   public void draw(){
 	  background(210, 255, 173);
+    //background.resize(400, 700);
     //image(background, 0, 0);
     //fallingPuff.resize(20, 20);
     //image(fallingPuff, 200, 350);
