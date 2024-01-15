@@ -22,11 +22,11 @@ public class Sketch extends PApplet {
 	// put your size call here
     size(400, 700);
     // Assign images 
-    fallingPuff = loadImage("Comp Sci CPT - Falling Purple Puff.png");
-    divingPuff = loadImage("Comp Sci CPT - Diving Purple Puff Sprite.png");
-    glidingPuff = loadImage("Comp Sci CPT - Gliding Purple Puff Sprite.png");
-    happyPuff = loadImage("Comp Sci CPT - Happy Purple Puff Sprite.png");
-    holdingPuff = loadImage("Comp Sci CPT - Purple Puff Sprite Holding.png");
+    fallingPuff = loadImage("Falling Purple Puff.png");
+    divingPuff = loadImage("Diving Purple Puff Sprite.png");
+    glidingPuff = loadImage("Gliding Purple Puff Sprite.png");
+    happyPuff = loadImage("Happy Purple Puff Sprite.png");
+    holdingPuff = loadImage("Purple Puff Sprite Holding.png");
     multiplier = loadImage("Green X.png");
     heart = loadImage("Pixel Heart.png");
   }
