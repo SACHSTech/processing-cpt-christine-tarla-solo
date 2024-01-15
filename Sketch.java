@@ -10,6 +10,10 @@ public class Sketch extends PApplet {
   PImage multiplier;
   PImage heart;
   PImage background;
+  // *DELETE AFTER* Maybe have more obstacles closer together if its too easy 
+  float[] fltObstacleY = {70, 140, 210, 280, 350, 420, 490, 560, 630, 700};
+  float[] fltObstacleX = new float[10];
+  int intObstacleSpeed = 2;
 
   /**
    * Called once at the beginning of execution, put your size all in this method
@@ -32,14 +36,27 @@ public class Sketch extends PApplet {
    */
   public void setup() {
     background(210, 255, 173);
+    for (int i = 0; i < fltObstacleX.length; i++){
+      // *DELETE AFTER* Potentially make every other X on the same side (use modulus; % = 0 is even, % = 1 is odd) to have a more even play 
+      fltObstacleX[i] = random(0, 325);
+    }
   }
 
   /**
    * Called repeatedly, anything drawn to the screen goes here
    */
   public void draw(){
-	  //image(background, 0, 0);
-    happyPuff.resize(20, 20);
-    image(happyPuff, 200, 350);
+	  background(210, 255, 173);
+    //image(background, 0, 0);
+    //fallingPuff.resize(20, 20);
+    //image(fallingPuff, 200, 350);
+    for (int i = 0; i < fltObstacleY.length; i++){
+      rect(fltObstacleX[i], fltObstacleY[i], 75, 15);
+      fltObstacleY[i] -= intObstacleSpeed;
+
+      if (fltObstacleY[i] < 0) {
+        fltObstacleY[i] = 700;
+      }
+    }
   }
 }
