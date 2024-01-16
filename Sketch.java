@@ -34,11 +34,15 @@ public class Sketch extends PApplet {
   int intLives = 3;
   boolean blnPlayerAlive = true;
   // Booster Variables 
-  int intLifeBoosterX;
-  int intLifeBoosterY;
-  int intScoreBoosterX;
-  int intScoreBoosterY;
-  int intBoosterTiming = 1500;
+  int intBoosterTiming = 0;
+  boolean blnShowLifeBooster = false;
+  float fltLifeBoosterX = random(0, 375);
+  int intLifeBoosterY = 700;
+  boolean blnShowScoreBooster = false;
+  float fltScoreBoosterX = random(0, 375);
+  int intScoreBoosterY = 700;
+  boolean blnScoreBoost;
+  int intScoreBoostTime = 0;
 
   /**
    * Called once at the beginning of execution, put your size all in this method
@@ -54,8 +58,11 @@ public class Sketch extends PApplet {
     happyPuff = loadImage("/CPT Images/Happy Purple Puff Sprite.png");
     holdingPuff = loadImage("/CPT Images/Purple Puff Sprite Holding.png");
     multiplier = loadImage("/CPT Images/Green X.png");
+    multiplier.resize(25, 25);
     heart = loadImage("/CPT Images/Pixel Heart.png");
+    heart.resize(25, 25);
     background = loadImage("/CPT Images/Yellow Cloud Background.png");
+    //background = loadImage("/CPT Images/Purple Moon Background.jpg");
     playerPuff = fallingPuff;
   }
 
@@ -97,14 +104,6 @@ public class Sketch extends PApplet {
       }
     }
 
-    /*intObsCounter -= intMovingSpeed;
-    if (intObsCounter == 0){
-      for (int j = 0; j < fltObstacleY.length; j++){
-        fltObstacleY[j] = j * 70;
-      }
-      intObsCounter = 700;
-    }*/
-
     // Draw Player Lives 
     stroke(205, 25, 130);
     fill(205, 25, 130);
@@ -118,6 +117,8 @@ public class Sketch extends PApplet {
     } else if (intLives == 1){
       rect(385, 5, 10, 10);
     }
+
+    showBoosters();
 
     if (blnPlayerAlive == false){
       noLoop();
@@ -201,5 +202,43 @@ public class Sketch extends PApplet {
     if (intLives == 0){
       blnPlayerAlive = false;
     }
+  }
+
+  /**
+   * A method that draws boosts  
+   */
+  public void showBoosters(){
+    intBoosterTiming += intMovingSpeed;
+
+    if (intBoosterTiming >= 1500 && intBoosterTiming <= 1510){
+      blnShowScoreBooster = true;
+    } else if (intBoosterTiming >= 2500 && intBoosterTiming <= 2510){
+      blnShowLifeBooster = true;
+      intBoosterTiming = 0;
+    }
+
+    if (blnShowScoreBooster == true){
+      image(multiplier, fltScoreBoosterX, intScoreBoosterY);
+      intScoreBoosterY -= intMovingSpeed;
+      if (intScoreBoosterY < -25){
+        blnShowScoreBooster = false;
+      }
+    }
+
+    if (blnShowLifeBooster == true){
+      image(heart, fltLifeBoosterX, intLifeBoosterY);
+      intLifeBoosterY -= intMovingSpeed;
+      if (intLifeBoosterY < - 25){
+        blnShowLifeBooster = false;
+      }
+    }
+
+  }
+
+  /**
+   * A method that enales the effects of boosters when touched by the player 
+   */
+  public void enableBoosters(){
+
   }
 }
