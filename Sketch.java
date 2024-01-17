@@ -1,7 +1,6 @@
 /** Edit Ideas 
  * Add a starting and ending menu (space to start game) 
- * Add life and score boosters 
- * Add score in top left corner 
+ * Add score in top left corner and score boosters 
  */
 
 import processing.core.PApplet;
@@ -17,6 +16,7 @@ public class Sketch extends PApplet {
   PImage holdingPuff;
   PImage multiplier;
   PImage heart;
+  PImage life;
   PImage background;
   // Obstacle Location Variables 
   float[] fltObstacleY = new float[10];
@@ -31,7 +31,7 @@ public class Sketch extends PApplet {
   boolean blnDown = false;
   boolean blnRight = false;
   // Player Lives Variables 
-  int intLives = 3;
+  int intLives = 2;
   boolean blnPlayerAlive = true;
   // Booster Variables 
   int intBoosterTiming = 0;
@@ -41,8 +41,11 @@ public class Sketch extends PApplet {
   boolean blnShowScoreBooster = false;
   float fltScoreBoosterX = random(0, 375);
   int intScoreBoosterY = 700;
-  boolean blnScoreBoost;
-  int intScoreBoostTime = 0;
+  // Score Variables 
+  int intScore = 0;
+  int intScoreIncrease = 1;
+  boolean blnScoreBoost = false;
+  double dblScoreBoostTime = 0;
 
   /**
    * Called once at the beginning of execution, put your size all in this method
@@ -61,6 +64,8 @@ public class Sketch extends PApplet {
     multiplier.resize(25, 25);
     heart = loadImage("/CPT Images/Pixel Heart.png");
     heart.resize(25, 25);
+    life = loadImage("/CPT Images/Pixel Heart.png");
+    life.resize(15, 15);
     background = loadImage("/CPT Images/Yellow Cloud Background.png");
     //background = loadImage("/CPT Images/Purple Moon Background.jpg");
     playerPuff = fallingPuff;
@@ -108,17 +113,24 @@ public class Sketch extends PApplet {
     stroke(205, 25, 130);
     fill(205, 25, 130);
     if (intLives == 3){
-      rect(355, 5, 10, 10);
-      rect(370, 5, 10, 10);
-      rect(385, 5, 10, 10);
+      image(life, 355, 5);
+      image(life, 370, 5);
+      image(life, 385, 5);
     } else if (intLives == 2){
-      rect(370, 5, 10, 10);
-      rect(385, 5, 10, 10);
+      image(life, 370, 5);
+      image(life, 385, 5);
     } else if (intLives == 1){
-      rect(385, 5, 10, 10);
+      image(life, 385, 5);
     }
 
+    // Call booster printing and functions 
     showBoosters();
+    enableBoosters();
+
+    // Calculate and show score 
+    intScore += intScoreIncrease;
+    // *REPLACE WITH TEXT ON SCREEN* 
+    System.out.println(intScore);
 
     if (blnPlayerAlive == false){
       noLoop();
@@ -205,40 +217,71 @@ public class Sketch extends PApplet {
   }
 
   /**
-   * A method that draws boosts  
+   * A method that draws and animates boosts based on appropriate timing 
    */
   public void showBoosters(){
     intBoosterTiming += intMovingSpeed;
 
+    // Determine timing of when to show each booster 
     if (intBoosterTiming >= 1500 && intBoosterTiming <= 1510){
       blnShowScoreBooster = true;
-    } else if (intBoosterTiming >= 2500 && intBoosterTiming <= 2510){
+    } else if (intBoosterTiming >= 2500){
       blnShowLifeBooster = true;
       intBoosterTiming = 0;
     }
 
+    // Draw, animate, and reset score boosters 
     if (blnShowScoreBooster == true){
       image(multiplier, fltScoreBoosterX, intScoreBoosterY);
       intScoreBoosterY -= intMovingSpeed;
       if (intScoreBoosterY < -25){
         blnShowScoreBooster = false;
+        intScoreBoosterY = 700;
+        fltScoreBoosterX = random(0, 375);
       }
     }
 
+    // Draw, animate, and reset life boosters 
     if (blnShowLifeBooster == true){
       image(heart, fltLifeBoosterX, intLifeBoosterY);
       intLifeBoosterY -= intMovingSpeed;
       if (intLifeBoosterY < - 25){
         blnShowLifeBooster = false;
+        intLifeBoosterY = 700;
+        fltLifeBoosterX = random(0, 375);
       }
     }
 
   }
 
   /**
-   * A method that enales the effects of boosters when touched by the player 
+   * A method that enables the effects of boosters when touched by the player 
    */
   public void enableBoosters(){
+    if (intPlayerY < intLifeBoosterY + 25 && intPlayerY + 75 > intLifeBoosterY){
+      if (intPlayerX < fltLifeBoosterX + 25 && intPlayerX + 75 > fltLifeBoosterX){        
+        if (intLives < 3 && intLives > 0){
+          blnShowLifeBooster = false;
+          intLives ++;
+        }
+      }
+    }
 
+    if (intPlayerY < intScoreBoosterY + 25 && intPlayerY + 75 > intScoreBoosterY){
+      if (intPlayerX < fltScoreBoosterX + 25 && intPlayerX + 75 > fltScoreBoosterX){        
+        blnShowScoreBooster = false;
+        blnScoreBoost = true;
+      }
+    }
+
+    if (blnScoreBoost == true){
+      dblScoreBoostTime += 0.0167;
+      intScoreIncrease = 2;
+      if (dblScoreBoostTime >= 3){
+        dblScoreBoostTime = 0;
+        blnScoreBoost = false;
+        intScoreIncrease = 1;
+      }
+    }
   }
 }
