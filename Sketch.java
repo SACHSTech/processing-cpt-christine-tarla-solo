@@ -1,7 +1,4 @@
-/** Edit Ideas 
- * Add a starting and ending menu (space to start game) 
- * Add score in top left corner and score boosters 
- */
+// TROUBLESHOOT - boosters printing in middle of screen; score doesnt go above 3588??? 
 
 import processing.core.PApplet;
 import processing.core.PImage;
@@ -18,6 +15,8 @@ public class Sketch extends PApplet {
   PImage heart;
   PImage life;
   PImage background;
+  // Start Menu Variables 
+  boolean blnStartGame = false;
   // Obstacle Location Variables 
   float[] fltObstacleY = new float[10];
   float[] fltObstacleX = new float[10];
@@ -31,7 +30,7 @@ public class Sketch extends PApplet {
   boolean blnDown = false;
   boolean blnRight = false;
   // Player Lives Variables 
-  int intLives = 2;
+  int intLives = 3;
   boolean blnPlayerAlive = true;
   // Booster Variables 
   int intBoosterTiming = 0;
@@ -43,7 +42,7 @@ public class Sketch extends PApplet {
   int intScoreBoosterY = 700;
   // Score Variables 
   int intScore = 0;
-  int intScoreIncrease = 1;
+  int intScoreIncrease = intMovingSpeed;
   boolean blnScoreBoost = false;
   double dblScoreBoostTime = 0;
 
@@ -57,9 +56,13 @@ public class Sketch extends PApplet {
     fallingPuff = loadImage("/CPT Images/Falling Purple Puff.png");
     fallingPuff.resize(75, 75);
     divingPuff = loadImage("/CPT Images/Diving Purple Puff Sprite.png");
+    divingPuff.resize(75, 75);
     glidingPuff = loadImage("/CPT Images/Gliding Purple Puff Sprite.png");
+    glidingPuff.resize(75, 75);
     happyPuff = loadImage("/CPT Images/Happy Purple Puff Sprite.png");
+    happyPuff.resize(75, 75);
     holdingPuff = loadImage("/CPT Images/Purple Puff Sprite Holding.png");
+    holdingPuff.resize(75, 75);
     multiplier = loadImage("/CPT Images/Green X.png");
     multiplier.resize(25, 25);
     heart = loadImage("/CPT Images/Pixel Heart.png");
@@ -68,6 +71,7 @@ public class Sketch extends PApplet {
     life.resize(15, 15);
     background = loadImage("/CPT Images/Yellow Cloud Background.png");
     //background = loadImage("/CPT Images/Purple Moon Background.jpg");
+    background.resize(400, 700);
     playerPuff = fallingPuff;
   }
 
@@ -78,7 +82,7 @@ public class Sketch extends PApplet {
     background.resize(400, 700);
     image(background, 0, 0);
     for (int i = 0; i < fltObstacleX.length; i++){
-      // *DELETE AFTER* Potentially make every other X on the same side (use modulus; % = 0 is even, % = 1 is odd) to have a more even play 
+      // ***Make every other X on the same side (use modulus; % = 0 is even, % = 1 is odd) to have a more even play 
       fltObstacleX[i] = random(0, 325);
     }
 
@@ -91,52 +95,62 @@ public class Sketch extends PApplet {
    * Called repeatedly, anything drawn to the screen goes here
    */
   public void draw(){
-    background.resize(400, 700);
     image(background, 0, 0);
-
-    image(playerPuff, intPlayerX, intPlayerY);
-    playerMovement();
-
+    image(happyPuff, 20, 30);
+    image(fallingPuff, 305, 30);
+    image(holdingPuff, 305, 595);
+    image(glidingPuff, 20, 595);
     stroke(160, 0, 165);
     fill(160, 0, 165);
-    for (int i = 0; i < fltObstacleY.length; i++){
-      rect(fltObstacleX[i], fltObstacleY[i], 75, 15);
-      //playerCollision();
-      fltObstacleY[i] -= intMovingSpeed;
+    textSize(30);
+    text("Press ENTER to start!", 55, 350);
+    if (blnStartGame == true){
+      image(background, 0, 0);
 
-      if (fltObstacleY[i] < 0) {
-        fltObstacleY[i] = 700;
+      image(playerPuff, intPlayerX, intPlayerY);
+      playerMovement();
+
+      stroke(160, 0, 165);
+      fill(160, 0, 165);
+      for (int i = 0; i < fltObstacleY.length; i++){
+        rect(fltObstacleX[i], fltObstacleY[i], 75, 15);
+        playerCollision();
+        fltObstacleY[i] -= intMovingSpeed;
+
+        if (fltObstacleY[i] < 0) {
+          fltObstacleY[i] = 700;
+        }
+      }
+
+      // Draw Player Lives 
+      stroke(205, 25, 130);
+      fill(205, 25, 130);
+      if (intLives == 3){
+        image(life, 355, 5);
+        image(life, 370, 5);
+        image(life, 385, 5);
+      } else if (intLives == 2){
+        image(life, 370, 5);
+        image(life, 385, 5);
+      } else if (intLives == 1){
+        image(life, 385, 5);
+      }
+
+      // Call booster printing and functions 
+      showBoosters();
+      enableBoosters();
+
+      // Calculate and show score 
+      intScore += (intScoreIncrease/2);
+      textSize(12);
+      text(intScore, 5, 15);
+
+      if (blnPlayerAlive == false){
+        noLoop();
       }
     }
-
-    // Draw Player Lives 
-    stroke(205, 25, 130);
-    fill(205, 25, 130);
-    if (intLives == 3){
-      image(life, 355, 5);
-      image(life, 370, 5);
-      image(life, 385, 5);
-    } else if (intLives == 2){
-      image(life, 370, 5);
-      image(life, 385, 5);
-    } else if (intLives == 1){
-      image(life, 385, 5);
-    }
-
-    // Call booster printing and functions 
-    showBoosters();
-    enableBoosters();
-
-    // Calculate and show score 
-    intScore += intScoreIncrease;
-    // *REPLACE WITH TEXT ON SCREEN* 
-    System.out.println(intScore);
-
-    if (blnPlayerAlive == false){
-      noLoop();
-    }
   }
-
+  
   /**
    * A method that changes the x and y value of the provided variables based on the conditions of the user keyboard input 
    */
@@ -170,7 +184,9 @@ public class Sketch extends PApplet {
       blnDown = true;
     } else if (key == 'D' || key == 'd'){
       blnRight = true;
-    } 
+    } else if (key == ENTER){
+      blnStartGame = true;
+    }
   }
 
   /**
@@ -276,7 +292,7 @@ public class Sketch extends PApplet {
 
     if (blnScoreBoost == true){
       dblScoreBoostTime += 0.0167;
-      intScoreIncrease = 2;
+      intScoreIncrease = intMovingSpeed;
       if (dblScoreBoostTime >= 3){
         dblScoreBoostTime = 0;
         blnScoreBoost = false;
