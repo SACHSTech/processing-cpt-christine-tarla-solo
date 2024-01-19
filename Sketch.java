@@ -1,9 +1,13 @@
-// TROUBLESHOOT - boosters printing in middle of screen; score doesnt go above 3588??? 
+/** TROUBLESHOOT - add handlee font; MAYBE add a boolean array to show obstacles (make false/hide when touched by player and detect when 
+ * intObstacleY[i-1] == 700 to reprint at intObstacleY[i-1] + 70); 
+ */
 
 import processing.core.PApplet;
 import processing.core.PImage;
+import processing.core.PFont;
 
 public class Sketch extends PApplet {
+  PFont handlee;
   // Declaring Image Variables 
   PImage playerPuff;
   PImage fallingPuff;
@@ -42,7 +46,7 @@ public class Sketch extends PApplet {
   int intScoreBoosterY = 700;
   // Score Variables 
   int intScore = 0;
-  int intScoreIncrease = intMovingSpeed;
+  int intScoreIncrease = intMovingSpeed/2;
   boolean blnScoreBoost = false;
   double dblScoreBoostTime = 0;
 
@@ -82,13 +86,20 @@ public class Sketch extends PApplet {
     background.resize(400, 700);
     image(background, 0, 0);
     for (int i = 0; i < fltObstacleX.length; i++){
-      // ***Make every other X on the same side (use modulus; % = 0 is even, % = 1 is odd) to have a more even play 
+      /* Make every other X on the same side (use modulus; % = 0 is even, % = 1 is odd) to have a more even play 
+      if (i % 2 == 0){
+        fltObstacleX[i] = random(0, 175);
+      } else if (i % 2 == 1){
+        fltObstacleX[i] = random(225, 325);
+      }*/
       fltObstacleX[i] = random(0, 325);
     }
 
     for (int j = 0; j < fltObstacleY.length; j++){
       fltObstacleY[j] = j * 70 + 700;
     }
+
+    handlee = createFont("Handlee.zip", 30);
   }
 
   /**
@@ -103,6 +114,7 @@ public class Sketch extends PApplet {
     stroke(160, 0, 165);
     fill(160, 0, 165);
     textSize(30);
+    textFont(handlee);
     text("Press ENTER to start!", 55, 350);
     if (blnStartGame == true){
       image(background, 0, 0);
@@ -118,7 +130,7 @@ public class Sketch extends PApplet {
         fltObstacleY[i] -= intMovingSpeed;
 
         if (fltObstacleY[i] < 0) {
-          fltObstacleY[i] = 700;
+          fltObstacleY[i] = i * 70 + 700;
         }
       }
 
@@ -141,7 +153,7 @@ public class Sketch extends PApplet {
       enableBoosters();
 
       // Calculate and show score 
-      intScore += (intScoreIncrease/2);
+      intScore += (intScoreIncrease);
       textSize(12);
       text(intScore, 5, 15);
 
@@ -167,7 +179,7 @@ public class Sketch extends PApplet {
     
     if (blnLeft == true && intPlayerX >= -25){
       intPlayerX -= 3;
-    } else if (blnRight == true && intPlayerX <= 375){
+    } else if (blnRight == true && intPlayerX <= 350){
       intPlayerX += 3;
     }
   }
@@ -213,9 +225,9 @@ public class Sketch extends PApplet {
    */
   public void playerCollision(){
     for (int i = 0; i < fltObstacleY.length; i++){
-      if (intPlayerY + 5 < fltObstacleY[i] + 15 && intPlayerY + 70 > fltObstacleY[i]){
+      if (intPlayerY + 5 < fltObstacleY[i] + 15 && intPlayerY + 60 > fltObstacleY[i]){
         if (intPlayerX + 5 < fltObstacleX[i] + 75 && intPlayerX + 70 > fltObstacleX[i]){        
-          fltObstacleY[i] = 700;
+          fltObstacleY[i] = i * 70 + 700;
           intLives --;
           updateLives();
         }
@@ -278,6 +290,7 @@ public class Sketch extends PApplet {
       if (intPlayerX < fltLifeBoosterX + 25 && intPlayerX + 75 > fltLifeBoosterX){        
         if (intLives < 3 && intLives > 0){
           blnShowLifeBooster = false;
+          intLifeBoosterY = 700;
           intLives ++;
         }
       }
@@ -286,6 +299,7 @@ public class Sketch extends PApplet {
     if (intPlayerY < intScoreBoosterY + 25 && intPlayerY + 75 > intScoreBoosterY){
       if (intPlayerX < fltScoreBoosterX + 25 && intPlayerX + 75 > fltScoreBoosterX){        
         blnShowScoreBooster = false;
+        intScoreBoosterY = 700;
         blnScoreBoost = true;
       }
     }
@@ -296,7 +310,7 @@ public class Sketch extends PApplet {
       if (dblScoreBoostTime >= 3){
         dblScoreBoostTime = 0;
         blnScoreBoost = false;
-        intScoreIncrease = 1;
+        intScoreIncrease = intMovingSpeed/2;
       }
     }
   }
