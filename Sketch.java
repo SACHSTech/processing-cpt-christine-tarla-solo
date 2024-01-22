@@ -48,9 +48,8 @@ public class Sketch extends PApplet {
    * Called once at the beginning of execution, put your size all in this method
    */
   public void settings() {
-	// put your size call here
     size(400, 700);
-    // Assign images 
+    // Assign anf resize images 
     fallingPuff = loadImage("/CPT Images/Falling Purple Puff.png");
     fallingPuff.resize(75, 75);
     divingPuff = loadImage("/CPT Images/Diving Purple Puff Sprite.png");
@@ -77,7 +76,6 @@ public class Sketch extends PApplet {
    * Called once at the beginning of execution. Add initial set up values here i.e background, stroke, fill etc.
    */
   public void setup() {
-    background.resize(400, 700);
     image(background, 0, 0);
     for (int i = 0; i < fltObstacleX.length; i++){
       // Make every other X on the same side for a more even play 
@@ -97,15 +95,18 @@ public class Sketch extends PApplet {
    * Called repeatedly, anything drawn to the screen goes here
    */
   public void draw(){
+    // Print starting menu 
     fill(160, 0, 165);
     textSize(30);
     text("Press ENTER to start!", 55, 350);
     if (blnStartGame == true){
       image(background, 0, 0);
 
+      // Print player image and call movement 
       image(playerPuff, intPlayerX, intPlayerY);
       playerMovement();
 
+      // Print and animate obstacles 
       stroke(160, 0, 165);
       fill(160, 0, 165);
       for (int i = 0; i < fltObstacleY.length; i++){
@@ -113,6 +114,7 @@ public class Sketch extends PApplet {
         playerCollision();
         fltObstacleY[i] -= intMovingSpeed;
 
+        // Reset obstacles and their x position once they reach the top of the screen 
         if (fltObstacleY[i] < -15) {
           fltObstacleY[i] = 700;
           if (i % 2 == 0){
@@ -155,7 +157,7 @@ public class Sketch extends PApplet {
   }
   
   /**
-   * A method that changes the x and y value of the provided variables based on the conditions of the user keyboard input 
+   * A method that changes the player x coordinate and obstacle speed based on the conditions of the user keyboard input 
    */
   public void playerMovement(){
     if (blnUp == true){
@@ -193,7 +195,7 @@ public class Sketch extends PApplet {
   }
 
   /**
-   * A method that stops the user keyaord input and resets values according to the pressed keys 
+   * A method that stops the user keyboard input and resets values according to the pressed keys 
    */
   public void keyReleased(){
     if (key == 'W' || key == 'w'){
@@ -212,7 +214,7 @@ public class Sketch extends PApplet {
   }
 
   /**
-   * A method that detects if the player circle collides with the snow, and deducts a life accordingly 
+   * A method that detects if the player image collides with the obstacles, and deducts a life accordingly 
    */
   public void playerCollision(){
     for (int i = 0; i < fltObstacleY.length; i++){
@@ -307,7 +309,7 @@ public class Sketch extends PApplet {
   }
 
   /**
-   * A method that displays an end menu when the player dies or reaches 10,000 points 
+   * A method that displays an end menu when the player dies 
    */
   public void endMenu(){
     if (intScore < 10000){
