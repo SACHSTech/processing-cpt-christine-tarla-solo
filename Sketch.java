@@ -1,13 +1,7 @@
-/** TROUBLESHOOT - add handlee font; MAYBE add a boolean array to show obstacles (make false/hide when touched by player and detect when 
- * intObstacleY[i-1] == 700 to reprint at intObstacleY[i-1] + 70); 
- */
-
 import processing.core.PApplet;
 import processing.core.PImage;
-import processing.core.PFont;
 
 public class Sketch extends PApplet {
-  PFont handlee;
   // Declaring Image Variables 
   PImage playerPuff;
   PImage fallingPuff;
@@ -86,35 +80,25 @@ public class Sketch extends PApplet {
     background.resize(400, 700);
     image(background, 0, 0);
     for (int i = 0; i < fltObstacleX.length; i++){
-      /* Make every other X on the same side (use modulus; % = 0 is even, % = 1 is odd) to have a more even play 
+      // Make every other X on the same side for a more even play 
       if (i % 2 == 0){
         fltObstacleX[i] = random(0, 175);
       } else if (i % 2 == 1){
         fltObstacleX[i] = random(225, 325);
-      }*/
-      fltObstacleX[i] = random(0, 325);
+      }
     }
 
     for (int j = 0; j < fltObstacleY.length; j++){
       fltObstacleY[j] = j * 70 + 700;
     }
-
-    handlee = createFont("Handlee.zip", 30);
   }
 
   /**
    * Called repeatedly, anything drawn to the screen goes here
    */
   public void draw(){
-    image(background, 0, 0);
-    image(happyPuff, 20, 30);
-    image(fallingPuff, 305, 30);
-    image(holdingPuff, 305, 595);
-    image(glidingPuff, 20, 595);
-    stroke(160, 0, 165);
     fill(160, 0, 165);
     textSize(30);
-    textFont(handlee);
     text("Press ENTER to start!", 55, 350);
     if (blnStartGame == true){
       image(background, 0, 0);
@@ -129,8 +113,13 @@ public class Sketch extends PApplet {
         playerCollision();
         fltObstacleY[i] -= intMovingSpeed;
 
-        if (fltObstacleY[i] < 0) {
-          fltObstacleY[i] = i * 70 + 700;
+        if (fltObstacleY[i] < -15) {
+          fltObstacleY[i] = 700;
+          if (i % 2 == 0){
+            fltObstacleX[i] = random(0, 175);
+          } else if (i % 2 == 1){
+            fltObstacleX[i] = random(225, 325);
+          }
         }
       }
 
@@ -158,6 +147,8 @@ public class Sketch extends PApplet {
       text(intScore, 5, 15);
 
       if (blnPlayerAlive == false){
+        image(background, 0, 0);
+        endMenu();
         noLoop();
       }
     }
@@ -226,8 +217,8 @@ public class Sketch extends PApplet {
   public void playerCollision(){
     for (int i = 0; i < fltObstacleY.length; i++){
       if (intPlayerY + 5 < fltObstacleY[i] + 15 && intPlayerY + 60 > fltObstacleY[i]){
-        if (intPlayerX + 5 < fltObstacleX[i] + 75 && intPlayerX + 70 > fltObstacleX[i]){        
-          fltObstacleY[i] = i * 70 + 700;
+        if (intPlayerX + 10 < fltObstacleX[i] + 75 && intPlayerX + 65 > fltObstacleX[i]){        
+          fltObstacleY[i] = 700;
           intLives --;
           updateLives();
         }
@@ -312,6 +303,25 @@ public class Sketch extends PApplet {
         blnScoreBoost = false;
         intScoreIncrease = intMovingSpeed/2;
       }
+    }
+  }
+
+  /**
+   * A method that displays an end menu when the player dies or reaches 10,000 points 
+   */
+  public void endMenu(){
+    if (intScore < 10000){
+      fill(160, 0, 165);
+      textSize(40);
+      text("Game Over!", 95, 350);
+      textSize(20);
+      text("Final Score: " + intScore, 125, 375);
+    } else {
+      fill(160, 0, 165);
+      textSize(40);
+      text("You Win!", 115, 350);
+      textSize(20);
+      text("Final Score: " + intScore, 110, 375);
     }
   }
 }
