@@ -4,10 +4,10 @@
 
 Welcome to the Purple Puff Dropper! 
 
-The objective of this game is to fall for as long as possible. The only catch? You have to avoid the obstacles. If you touch an obstacle, you will lose a life, and if you lose all three of your lives, the game ends. Try to get as many points as possible!
+The objective of this game is to fall for as long as possible. The only catch? You have to avoid the obstacles. If you touch an obstacle, you will lose a life, and if you lose all three of your lives, the game ends. Try to get as many points as possible, and if you pass 10,000 points, you win!
 
-Use the arrow keys to control your puff. The left arrow key makes your puff move to the left; the right arrow key makes your puff move to the right. The up arrow key makes your puff glide, slowing down the speed of descent, while the down arrow key makes your puff dive, speeding up the speed of descent. 
+Use the WASD keys to control your puff. The "A" key makes your puff move to the left; the "D" key makes your puff move to the right. The "W" key makes your puff glide, slowing down the speed of descent, while the "S" key makes your puff dive, speeding up the descent. You gain 2 points every run when falling, 1 point when gliding, and 4 points when diving. 
 
-There are also boosters that you can collect during your fall. The green dots add 5 points to your score, the blue dots add 10 points, and the pink dots add 20 points. The hearts can help replenish your lives if you do not have all three left. The "X"s double the points you gain from falling for five seconds. 
+There are also boosters that you can collect during your fall. The hearts can help replenish your lives if you do not have all three left, and the "X"s double the points you gain from falling for three seconds. 
 
 Have fun!
