@@ -1,6 +1,11 @@
 import processing.core.PApplet;
 import processing.core.PImage;
 
+/**
+ * A program that lets the user play a dropper game where they can move left and right, as well as change their speed of descent, and collect points and boosters
+ * @author: C. Tarla
+ */
+
 public class Sketch extends PApplet {
   // Declaring Image Variables 
   PImage playerPuff;
