@@ -2,7 +2,8 @@ import processing.core.PApplet;
 import processing.core.PImage;
 
 /**
- * A program that lets the user play a dropper game where they can move left and right, as well as change their speed of descent, and collect points and boosters
+ * A program that lets the user play a dropper game where they can move left and right, as well as change their speed of descent, 
+ * and collect points and boosters
  * @author: C. Tarla
  */
 
@@ -23,7 +24,6 @@ public class Sketch extends PApplet {
   // Obstacle Location Variables 
   float[] fltObstacleY = new float[10];
   float[] fltObstacleX = new float[10];
-  int intObsCounter = 700;
   int intMovingSpeed = 2;
   // Player Movement Variables 
   int intPlayerX = 163;
@@ -54,7 +54,7 @@ public class Sketch extends PApplet {
    */
   public void settings() {
     size(400, 700);
-    // Assign anf resize images 
+    // Assign and resize images 
     fallingPuff = loadImage("/CPT Images/Falling Purple Puff.png");
     fallingPuff.resize(75, 75);
     divingPuff = loadImage("/CPT Images/Diving Purple Puff Sprite.png");
@@ -72,7 +72,6 @@ public class Sketch extends PApplet {
     life = loadImage("/CPT Images/Pixel Heart.png");
     life.resize(15, 15);
     background = loadImage("/CPT Images/Yellow Cloud Background.png");
-    //background = loadImage("/CPT Images/Purple Moon Background.jpg");
     background.resize(400, 700);
     playerPuff = fallingPuff;
   }
@@ -82,6 +81,7 @@ public class Sketch extends PApplet {
    */
   public void setup() {
     image(background, 0, 0);
+    // Set up obstacle x and y values 
     for (int i = 0; i < fltObstacleX.length; i++){
       // Make every other X on the same side for a more even play 
       if (i % 2 == 0){
@@ -154,6 +154,7 @@ public class Sketch extends PApplet {
       text(intScore, 5, 15);
 
       if (blnPlayerAlive == false){
+        // Stop game and print end menu 
         image(background, 0, 0);
         endMenu();
         noLoop();
@@ -284,6 +285,7 @@ public class Sketch extends PApplet {
    * A method that enables the effects of boosters when touched by the player 
    */
   public void enableBoosters(){
+    // Detect collision between player and life booster 
     if (intPlayerY < intLifeBoosterY + 25 && intPlayerY + 75 > intLifeBoosterY){
       if (intPlayerX < fltLifeBoosterX + 25 && intPlayerX + 75 > fltLifeBoosterX){        
         if (intLives < 3 && intLives > 0){
@@ -294,6 +296,7 @@ public class Sketch extends PApplet {
       }
     }
 
+    // Detect collision between player and score booster 
     if (intPlayerY < intScoreBoosterY + 25 && intPlayerY + 75 > intScoreBoosterY){
       if (intPlayerX < fltScoreBoosterX + 25 && intPlayerX + 75 > fltScoreBoosterX){        
         blnShowScoreBooster = false;
@@ -302,6 +305,7 @@ public class Sketch extends PApplet {
       }
     }
 
+    // Change score increase while score booster applies 
     if (blnScoreBoost == true){
       dblScoreBoostTime += 0.0167;
       intScoreIncrease = intMovingSpeed;
